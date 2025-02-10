@@ -1,14 +1,4 @@
 import mongoose, {Document, Schema} from "mongoose";
-import {NextFunction, Request, Response} from "express";
-import dotenv from "dotenv"
-
-dotenv.config()
-mongoose.connect(process.env.DB_URI || `mongodb://localhost:27017/`).then(() => {
-    console.log("connected to database")
-}).catch((error) => {
-    console.log("error connecting to database")
-    console.log(error)
-});
 
 interface IProduct extends Document {
     name: string;
@@ -19,21 +9,38 @@ interface IProduct extends Document {
 }
 
 const productSchema: Schema = new mongoose.Schema<IProduct>({
-    name: {type: String, required: true},
-    image: {type: String, required: true},
-    price: {type: Number, required: true},
-    description: {type: String, required: true},
-    category: {type: String, required: true}
+    name: {
+        type: String,
+        required: [true, "Product name is required"],
+        trim: true,
+        minlength: [3, "Product name must be at least 3 characters long"],
+        maxlength: [100, "Product name must be less than 100 characters"]
+    },
+    image: {
+        type: String,
+        required: [true, "Product image is required"],
+        trim: true,
+    },
+    price: {
+        type: Number,
+        required: [true, "Product price is required"],
+        min: [0, "Product price must be a positive number"]
+    },
+    description: {
+        type: String,
+        required: [true, "Product description is required"],
+        trim: true,
+        minlength: [10, "Product description must be at least 10 characters long"],
+        maxlength: [1000, "Product description must be less than 1000 characters"]
+    },
+    category: {
+        type: String,
+        required: [true, "Product category is required"],
+        trim: true,
+        minlength: [3, "Product category must be at least 3 characters long"],
+        maxlength: [50, "Product category must be less than 50 characters"]
+    }
 });
-const getAll = (req: Request, res: Response, next: NextFunction) => {
-    return Product.find().then((products) => {
-            res.json(products)
-        }
-    ).catch((error) => {
-        res.json({error: error})
-    })
-}
-
 
 const Product = mongoose.model<IProduct>("Product", productSchema);
-export {Product, getAll};
+export {Product};

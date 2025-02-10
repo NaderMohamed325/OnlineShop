@@ -1,38 +1,32 @@
-<%- include('parts/header')%>
-<%- include('parts/navbar')%>
+<%- include('parts/header') %>
+<%- include('parts/navbar') %>
+<form >
+    <div class="input-group mb-3">
+        <select class="form-select" id="category" name="category">
+            <option value="">All Categories</option>
+            <% categories.forEach(function(category) { %>
+                <option value="<%= category %>"><%= category %></option>
+            <% }); %>
+        </select>
+    </div>
+</form>
 
 <div class="container mt-5">
-    <h1>Welcome to Online Shop</h1>
-    <p>This is the home page of your online shop. Explore our features using the navigation bar.</p>
-    <div class="row mt-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Browse Products</h5>
-                    <p class="card-text">Explore a wide range of products available in our shop.</p>
-                    <a href="/products" class="btn btn-primary">Browse</a>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <% Object.values(products).forEach(function(product) { %>
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <img class="card-img-top p-3 rounded" src="<%= product.image %>" alt="<%= product.name %>">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold"><%= product.name %></h5>
+                        <p class="card-text flex-grow-1"><%= product.description %></p>
+                        <p class="card-text"><strong>Price:</strong> $<%= product.price %></p>
+                        <a href="#" class="btn btn-primary mt-auto">Buy Now</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Your Cart</h5>
-                    <p class="card-text">Review items in your cart and proceed to checkout.</p>
-                    <a href="/cart" class="btn btn-primary">View Cart</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Your Orders</h5>
-                    <p class="card-text">Check the status of your current and past orders.</p>
-                    <a href="/orders" class="btn btn-primary">View Orders</a>
-                </div>
-            </div>
-        </div>
+        <% }); %>
     </div>
 </div>
 
-<%- include('parts/footer')%>
+<%- include('parts/footer') %>
