@@ -37,7 +37,7 @@ const LoginPost = catchAsync(async (req: Request, res: Response, _next: NextFunc
         return res.render("login", {errors: [{msg: "Invalid credentials"}]});
     }
 
-    // req.session.userId = user._id as string;
+    req.session.userId = user._id as string;
     //this is the current error i am facing
 
     // Ensure session is saved before redirecting

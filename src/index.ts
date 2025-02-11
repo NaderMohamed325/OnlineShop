@@ -11,24 +11,15 @@ import session from "express-session";
 import sessionStore from "connect-mongodb-session";
 
 dotenv.config();
-
 const MongoDBStore = sessionStore(session);
-
 const app = express();
-
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(morgan('dev'));
-
-// View engine setup
 app.set("view engine", "ejs");
+app.use(express.static(path.join(__dirname, 'images')));
 app.set("views", path.resolve(__dirname, "../src/views"));
 
-// Static files
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Database connection
 mongoose.connect(process.env.DB_URI || `mongodb://localhost:27017/products`)
     .then(() => {
         console.log("Connected to database");
@@ -37,7 +28,6 @@ mongoose.connect(process.env.DB_URI || `mongodb://localhost:27017/products`)
         console.error("Error connecting to database");
         console.error(error);
     });
-
 // Session store setup
 const store = new MongoDBStore({
     uri: process.env.DB_URI || `mongodb://localhost:27017/products`,
@@ -58,22 +48,16 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
     }
 }));
-
-// Routers
 app.use('/', homeRouter);
 app.use('/', productRouter);
 app.use('/', authRouter);
-
-// Global error handler
 app.use(globalErrorHandler);
-
-// 404 handler
 app.all('*', (req: Request, res: Response) => {
     res.render('error.ejs', {error: {status: 404, message: `Can't find ${req.originalUrl} on this server`}});
     console.error(`Can't find ${req.originalUrl} on this server`);
 });
 
-// Start the server
+
 app.listen(3000, () => {
-    console.log(`Server is running on http://localhost:3000`);
+    console.log(`Server is running`);
 });
