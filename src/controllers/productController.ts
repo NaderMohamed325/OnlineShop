@@ -7,7 +7,6 @@ import mongoose from "mongoose";
 const getProduct = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const productID = req.params.id;
 
-    // ✅ Check if the provided ID is a valid MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(productID)) {
         return next(new AppError("Invalid ID", 400));
     }
