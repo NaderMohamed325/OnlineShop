@@ -1,0 +1,116 @@
+<%- include('parts/header') %>
+<%- include('parts/navbar') %>
+
+<style>
+    body {
+        background: linear-gradient(to right, #1f1c2c, #928dab);
+        min-height: 100vh;
+        color: white;
+    }
+
+    .container {
+        margin-bottom: 50px;
+    }
+
+    .card {
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        color: white;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .card:hover {
+        box-shadow: 0 12px 24px rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #ff7eb3, #ffcc00);
+        border: none;
+        padding: 10px 15px;
+        font-size: 1rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+        font-weight: bold;
+        width: 100%;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #ff4d6d, #ff9100);
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(255, 140, 0, 0.8);
+    }
+
+    input {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    input::placeholder {
+        color: #ddd;
+    }
+
+    input:focus {
+        background: rgba(255, 255, 255, 0.3);
+        outline: none;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    .alert {
+        background: rgba(255, 0, 0, 0.2);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card">
+        <h2 class="text-center mb-4">Sign Up</h2>
+
+        <% if (errors && errors.length > 0) { %>
+            <div class="alert">
+                <ul>
+                    <% errors.forEach(function(error) { %>
+                        <li><%= error.msg %></li>
+                    <% }); %>
+                </ul>
+            </div>
+        <% } %>
+
+        <form action="/signup" method="POST">
+            <div class="form-group mb-3">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="passwordConfirmation">Confirm Password</label>
+                <input type="password" class="form-control" id="passwordConfirmation" name="passwordConfirmation" placeholder="Confirm password">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+    </div>
+</div>
+
+<%- include('parts/footer') %>
