@@ -1,0 +1,66 @@
+<%- include('parts/header') %>
+<%- include('parts/navbar') %>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #1e1e2e, #252542);
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+    }
+
+    .error-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 80vh;
+    }
+
+    .error-code {
+        font-size: 6rem;
+        font-weight: bold;
+        text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+        animation: glow 1.5s infinite alternate;
+    }
+
+    @keyframes glow {
+        from {
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+        }
+        to {
+            text-shadow: 0 0 40px rgba(255, 0, 0, 1);
+        }
+    }
+
+    .error-message {
+        font-size: 1.5rem;
+        margin-top: 20px;
+        color: #ccc;
+    }
+
+    .btn-home {
+        background: #ff4757;
+        color: white;
+        padding: 12px 24px;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        margin-top: 20px;
+        transition: all 0.3s ease-in-out;
+        display: inline-block;
+    }
+
+    .btn-home:hover {
+        background: #e84118;
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="error-container">
+    <div class="error-code"><%= error.status || 500 %></div>
+    <p class="error-message"><%= error.message || "Something went wrong!" %></p>
+    <a href="/" class="btn-home">Go Back Home</a>
+</div>
+
+<%- include('parts/footer') %>
