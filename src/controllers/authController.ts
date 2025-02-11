@@ -9,7 +9,6 @@ const SignUpPage = catchAsync(async (req: Request, res: Response, _next: NextFun
 });
 
 const SignUpPost = catchAsync(async (req: Request, res: Response, _next: NextFunction) => {
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.render('signup.ejs', {errors: errors.array()});
@@ -25,18 +24,30 @@ const LogInPage = catchAsync(async (req: Request, res: Response, _next: NextFunc
 
 const LoginPost = catchAsync(async (req: Request, res: Response, _next: NextFunction) => {
     const {email, password} = req.body;
+
+    // Find the user and include password field
     const user = await User.findOne({email}).select('+password');
     if (!user) {
-        return res.render("login", {errors: [{msg: "Invalid Email"}]});
+        return res.render("login", {errors: [{msg: "Invalid credentials"}]});
     }
 
+    // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-        return res.render("login", {errors: [{msg: "Invalid Password"}]});
+        return res.render("login", {errors: [{msg: "Invalid credentials"}]});
     }
 
+    // req.session.userId = user._id as string;
+    //this is the current error i am facing
 
-    res.redirect("/dashboard");
+    // Ensure session is saved before redirecting
+    req.session.save((err) => {
+        if (err) {
+            console.error("Session save error:", err);
+            return res.render("login", {errors: [{msg: "Something went wrong. Please try again."}]});
+        }
+        res.redirect("/dashboard");
+    });
 });
 
-export {SignUpPage, SignUpPost, LogInPage, LoginPost}
+export {SignUpPage, SignUpPost, LogInPage, LoginPost};
