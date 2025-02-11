@@ -5,16 +5,16 @@ import {catchAsync} from "../utils/catchAsync";
 
 const getHome = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const products = await Product.find();
-        const categories = [...new Set(products.map((product) => product.category))];
-
+        const category = req.query.category as string;
+        const products = category ? await Product.find({ category }) : await Product.find();
+        const categories = await Product.distinct('category');
+        categories.sort();
         res.render("index.ejs", { products, categories });
     } catch (error) {
         console.error(error);
         next(new AppError("Error fetching products", 500));
     }
 });
-
 
 const createProduct = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -1,16 +1,17 @@
-import express, {Request, Response} from "express";
+import express, { Request, Response } from "express";
 import morgan from "morgan";
 import path from "path";
-import {homeRouter} from "./routers/homeRouter";
+import { homeRouter } from "./routers/homeRouter";
 import mongoose from "mongoose";
-import {globalErrorHandler} from "./utils/errorHandler";
+import { globalErrorHandler } from "./utils/errorHandler";
 import dotenv from "dotenv";
+import { productRouter } from "./routers/productRouter";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, 'images')));
@@ -23,17 +24,16 @@ mongoose.connect(process.env.DB_URI || `mongodb://localhost:27017/products`)
     .catch((error) => {
         console.error("Error connecting to database");
         console.error(error);
-
     });
 
 app.use('/', homeRouter);
+app.use('/', productRouter);
 app.use(globalErrorHandler);
 app.all('*', (req: Request, res: Response) => {
-    res.status(404).json({
-        status: "fail",
-        message: `Can't find ${req.originalUrl} on this server`
-    });
+    res.render('error.ejs', { error: { status: 404, message: `Can't find ${req.originalUrl} on this server` } });
+    console.error(`Can't find ${req.originalUrl} on this server`);
 });
+
 app.listen(3000, () => {
     console.log(`Server is running`);
 });
