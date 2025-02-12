@@ -9,6 +9,7 @@ import {productRouter} from "./routers/productRouter";
 import {authRouter} from "./routers/authRouter";
 import session from "express-session";
 import sessionStore from "connect-mongodb-session";
+import favicon from "serve-favicon";
 
 dotenv.config();
 const MongoDBStore = sessionStore(session);
@@ -19,7 +20,7 @@ app.use(morgan('dev'));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, 'images')));
 app.set("views", path.resolve(__dirname, "../src/views"));
-
+app.use(favicon(path.join(__dirname, 'favicon.ico')));
 mongoose.connect(process.env.DB_URI || `mongodb://localhost:27017/products`)
     .then(() => {
         console.log("Connected to database");
@@ -48,15 +49,19 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
     }
 }));
+
+
 app.use('/', homeRouter);
 app.use('/', productRouter);
 app.use('/', authRouter);
 app.use(globalErrorHandler);
 app.all('*', (req: Request, res: Response) => {
-    res.render('error.ejs', {error: {status: 404, message: `Can't find ${req.originalUrl} on this server`}});
+    res.render('error.ejs', {
+        error: {status: 404, message: `Can't find ${req.originalUrl} on this server`},
+        isUser: req.session.userId
+    });
     console.error(`Can't find ${req.originalUrl} on this server`);
 });
-
 
 app.listen(3000, () => {
     console.log(`Server is running`);
