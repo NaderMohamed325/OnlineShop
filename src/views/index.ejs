@@ -2,31 +2,71 @@
 <%- include('parts/navbar') %>
 
 <style>
-    /* 🔥 GOATED Background */
+    /* 🔥 Stylish Glassmorphic Navbar */
+    .navbar {
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(12px);
+        border-radius: 12px;
+        padding: 12px 20px;
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: color 0.3s ease-in-out;
+    }
+
+    .navbar-brand:hover {
+        color: #ffd700 !important;
+    }
+
+    .nav-link {
+        font-size: 1.1rem;
+        transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+    }
+
+    .nav-link:hover {
+        color: #ffd700 !important;
+        text-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+    }
+
+    .navbar-toggler {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 6px 12px;
+        border-radius: 8px;
+    }
+
+    .navbar-toggler-icon {
+        filter: invert(1);
+    }
+
+    /* 🎨 Background */
     body {
         background: linear-gradient(to right, #1f1c2c, #928dab);
         min-height: 100vh;
         color: white;
+        font-family: 'Poppins', sans-serif;
     }
 
+    /* 🖼 Container Styling */
     .container {
         margin-bottom: 50px;
     }
 
-    /* 💎 Glassmorphic Card Design */
+    /* 💎 Glassmorphic Card */
     .card {
         border-radius: 15px;
-        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
-        padding: 10px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         color: white;
     }
 
     .card:hover {
         transform: scale(1.05);
-        box-shadow: 0 12px 24px rgba(255, 255, 255, 0.2);
+        box-shadow: 0 12px 24px rgba(255, 255, 255, 0.25);
     }
 
     .card-img-top {
@@ -35,11 +75,6 @@
         border-radius: 10px;
     }
 
-    .card-body {
-        padding: 20px;
-    }
-
-    /* 🔥 Neon Link Titles */
     .card-title a {
         color: #ffcc00;
         text-decoration: none;
@@ -50,16 +85,15 @@
         color: #ff8800;
     }
 
-    /* 🟢 Cool Text Colors */
     .card-text {
         color: #d1d1e9;
     }
 
-    /* 🟣 GOATED Buttons */
+    /* 🔥 Animated Buttons */
     .btn-primary {
         background: linear-gradient(135deg, #ff7eb3, #ffcc00);
         border: none;
-        padding: 10px 15px;
+        padding: 10px 16px;
         font-size: 1rem;
         border-radius: 8px;
         transition: all 0.3s;
@@ -69,18 +103,25 @@
     .btn-primary:hover {
         background: linear-gradient(135deg, #ff4d6d, #ff9100);
         transform: scale(1.1);
-        box-shadow: 0 0 10px rgba(255, 140, 0, 0.8);
+        box-shadow: 0 0 12px rgba(255, 140, 0, 0.8);
     }
 
-    .input-group {
-        max-width: 300px;
-        margin: 20px auto;
+    /* 📦 Quantity Input */
+    .quantity-input {
+        width: 60px;
+        text-align: center;
+        border-radius: 6px;
+        border: 2px solid #ffcc00;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
     }
 
+    /* 🔵 Dropdown Select */
     .form-select {
         border-radius: 8px;
         padding: 10px;
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.15);
         color: white;
         border: none;
     }
@@ -90,27 +131,31 @@
         color: white;
     }
 
-    /* 🔵 Neon Quantity Input */
-    .quantity-input {
-        width: 60px;
-        text-align: center;
-        border-radius: 6px;
-        border: 2px solid #ffcc00;
-        padding: 5px;
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-    }
+    /* 📱 Responsive Layout */
+    @media (max-width: 768px) {
+        .navbar {
+            text-align: center;
+        }
 
-    /* 🖥️ Better Grid for Laptops */
-    .row {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
+        .navbar-nav {
+            margin-top: 10px;
+        }
+
+        .container.d-flex {
+            justify-content: center !important;
+        }
+
+        .row {
+            justify-content: center;
+        }
+
+        .col {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
     }
 
     @media (min-width: 992px) {
-        /* Laptop screens */
         .row {
             justify-content: flex-start;
         }
@@ -121,11 +166,6 @@
         }
     }
 
-    @media (max-width: 768px) {
-        .container.d-flex {
-            justify-content: center !important;
-        }
-    }
 </style>
 
 <!-- 🟡 Category Selector -->

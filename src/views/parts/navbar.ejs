@@ -4,7 +4,8 @@
         <a class="navbar-brand text-warning fw-bold fs-4" href="/">Online Shop</a>
 
         <!-- 📱 Mobile Toggle Button -->
-        <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        <button class="navbar-toggler border-0" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -15,28 +16,41 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/cart">Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/orders">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/add-product">Add Product</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/manage-orders">Manage Orders</a>
-                </li>
+                <% if (isUser) { %>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/cart">Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/orders">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/add-product">Add Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/manage-orders">Manage Orders</a>
+                    </li>
+                <% } %>
             </ul>
 
-            <!-- 🟣 Right-aligned links -->
+            <!-- 🟣 Right-aligned buttons -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/signup">Sign Up</a>
+                    <a class="btn btn-success mx-1" href="/signup">Sign Up</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/login">Login</a>
+                    <a class="btn btn-primary mx-1" href="/login">Login</a>
                 </li>
+                <% if(isUser){
+                %>
+                    <li class="nav-item">
+                        <form action="/logout" method="POST">
+                            <button type="submit" class="btn btn-danger mx-1">Logout</button>
+                        </form>
+                    </li>
+                <%
+                }
+                %>
+
             </ul>
         </div>
     </div>
