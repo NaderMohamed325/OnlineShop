@@ -1,5 +1,6 @@
 import {createProduct, getHome} from "../controllers/homeController";
 import express from "express";
+import {isAuthenticated} from "../utils/middleWares/protect/routeProtection";
 
 const homeRouter = express.Router();
 
