@@ -39,7 +39,7 @@ const LoginPost = catchAsync(async (req: Request, res: Response, next: NextFunct
     console.log("Session:", req.session);
     console.log("Session User ID:", req.session.userId);
 
-    req.session.userId = user._id as string;
+    req.session.userId= user._id as string;
 
     req.session.save((err) => {
         if (err) {
