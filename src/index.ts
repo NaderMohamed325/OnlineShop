@@ -10,6 +10,9 @@ import {authRouter} from "./routers/authRouter";
 import session from "express-session";
 import sessionStore from "connect-mongodb-session";
 import favicon from "serve-favicon";
+import {cartRouter} from "./routers/cartRouter";
+import flash from "connect-flash";
+
 
 dotenv.config();
 const MongoDBStore = sessionStore(session);
@@ -49,11 +52,20 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
     }
 }));
+// After session middleware
+app.use(flash());
 
+// Pass flash messages to views
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    next();
+});
 
 app.use('/', homeRouter);
 app.use('/', productRouter);
 app.use('/', authRouter);
+app.use('/', cartRouter);
 app.use(globalErrorHandler);
 app.all('*', (req: Request, res: Response) => {
     res.render('error.ejs', {
