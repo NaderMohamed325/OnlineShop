@@ -16,6 +16,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^5.0.0",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
@@ -23,6 +24,7 @@
     "express-session": "^1.18.1",
     "express-validator": "^7.2.1",
     "jsonwebtoken": "^9.0.2",
+    "logger": "^0.0.1",
     "mongoose": "^8.9.6",
     "morgan": "^1.10.0",
     "validator": "^13.12.0"
@@ -30,6 +32,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
+    "@types/connect-flash": "^0.0.40",
     "@types/connect-mongodb-session": "^2.4.7",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.1",
