@@ -185,6 +185,20 @@
 
 <!-- 🛒 Products Grid -->
 <div class="container mt-5">
+    <% if (success_msg) { %>
+        <div class="alert alert-success" id="flash-message">
+            <%= success_msg %>
+        </div>
+    <% } %>
+    <% if (errors && errors.length > 0) { %>
+        <div class="alert alert-danger">
+            <ul>
+                <% errors.forEach(function(error) { %>
+                    <li><%= error.msg %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
     <div class="row">
         <% Object.values(products).forEach(function(product) { %>
             <div class="col">
@@ -196,13 +210,15 @@
                         </h5>
                         <p class="card-text flex-grow-1"><%= product.description %></p>
                         <p class="card-text"><strong>Price:</strong> $<%= product.price %></p>
-                        <form action="/cart" method="post">
-                            <input type="hidden" name="product_id" value="<%= product._id %>">
+                        <form action="/cart-add" method="post">
+                            <input type="hidden" name="productID" value="<%= product._id %>">
+                            <input type="hidden" name="name" value="<%= product.name %>">
+                            <input type="hidden" name="description" value="<%= product.description %>">
+                            <input type="hidden" name="price" value="<%= product.price %>">
+                            <input type="hidden" name="image" value="<%= product.image %>"> <!-- Add this line -->
                             <div class="d-flex align-items-center">
                                 <label for="quantity_<%= product._id %>" class="me-2"><strong>Qty:</strong></label>
-                                <input type="number" id="quantity_<%= product._id %>" name="quantity" min="1" value="1"
-                                       class="quantity-input">
-                                <!-- 🟢 Add to Cart Button -- make space for the button -->
+                                <input type="number" id="quantity_<%= product._id %>" name="quantity" min="1" value="1" class="quantity-input">
                                 <div class="ms-2">
                                     <button type="submit" class="btn btn-primary">Add to Cart</button>
                                 </div>
@@ -216,3 +232,13 @@
 </div>
 
 <%- include('parts/footer') %>
+
+<script>
+    // Hide flash message after 5 seconds
+    setTimeout(function() {
+        const flashMessage = document.getElementById('flash-message');
+        if (flashMessage) {
+            flashMessage.style.display = 'none';
+        }
+    }, 5000);
+</script>
