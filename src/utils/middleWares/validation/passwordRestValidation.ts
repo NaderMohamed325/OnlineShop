@@ -3,6 +3,8 @@ import {NextFunction, Request, Response} from "express";
 import {User} from "../../../models/userModel";
 import * as crypto from "node:crypto";
 import nodemailer from 'nodemailer';
+import {validationResult} from "express-validator";
+import { check } from 'express-validator';
 
 const passwordResetMailer = catchAsync(async (req: Request, res: Response, _next: NextFunction) => {
     const user = await User.findOne({email: req.body.email});
@@ -54,35 +56,22 @@ const passwordResetMailer = catchAsync(async (req: Request, res: Response, _next
 });
 
 const passwordResetToken = catchAsync(async (req: Request, res: Response) => {
-    const {token} = req.params;
-    const user = await User.findOne({
-        resetToken: token,
-        tokenExpireTime: {$gt: Date.now()}
-    });
-    if (user)
-        console.log(user.tokenExpireTime > Date.now());
-    if (user) {
-        res.render('passwordResetGate.ejs', {token, isUser: req.session.userId});
-    } else {
-        res.render('error.ejs', {
-            error: {status: 500, message: 'Invalid or expired token'},
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('passwordResetGate.ejs', {
+            errors: errors.array(),
+            token: req.params.token,
             isUser: req.session.userId
         });
     }
-});
-const passwordReset = catchAsync(async (req: Request, res: Response) => {
-    const {token, password} = req.body;
+    const {token} = req.params;
+
     const user = await User.findOne({
         resetToken: token,
         tokenExpireTime: {$gt: Date.now()}
     });
-    console.log(user);
     if (user) {
-        user.password = password;
-        user.resetToken = "";
-        user.tokenExpireTime = undefined;
-        await user.save();
-        res.render('passwordResetSuccess.ejs', {isUser: req.session.userId});
+        res.render('passwordResetGate.ejs', {token, isUser: req.session.userId, errors: null});
     } else {
         res.render('error.ejs', {
             error: {status: 500, message: 'Invalid or expired token'},
@@ -91,4 +80,43 @@ const passwordReset = catchAsync(async (req: Request, res: Response) => {
     }
 });
 
-export {passwordResetMailer, passwordResetToken, passwordReset};
+const passwordResetValidation = [
+    check('password')
+        .isLength({ min: 8, max: 64 })
+        .withMessage('Password must be between 8 and 64 characters')
+        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+        .withMessage('Password must contain at least one number, one uppercase letter, and one lowercase letter')
+];
+
+const passwordReset = catchAsync(async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('passwordResetGate.ejs', {
+            errors: errors.array(),
+            token: req.body.token,
+            isUser: req.session.userId
+        });
+    }
+
+    const { token, password } = req.body;
+
+    const user = await User.findOne({
+        resetToken: token,
+        tokenExpireTime: { $gt: Date.now() }
+    });
+
+    if (user) {
+        user.password = password;
+        user.resetToken = "";
+        user.tokenExpireTime = undefined;
+        await user.save();
+        res.render('passwordResetSuccess.ejs', { isUser: req.session.userId });
+    } else {
+        res.render('error.ejs', {
+            error: { status: 500, message: 'Invalid or expired token' },
+            isUser: req.session.userId
+        });
+    }
+});
+
+export {passwordResetMailer, passwordResetToken, passwordReset,passwordResetValidation};
