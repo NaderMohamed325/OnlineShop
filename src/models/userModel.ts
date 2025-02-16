@@ -5,6 +5,7 @@ export interface IUser extends mongoose.Document {
     name: string;
     email: string;
     password: string;
+    resetToken: string;
 }
 
 const userSchema = new mongoose.Schema({
@@ -24,6 +25,10 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Please provide your password'],
         minlength: 8,
         select: false
+    },
+    resetToken: {
+        type: String,
+        required: false
     }
 });
 
@@ -33,7 +38,7 @@ userSchema.pre<IUser>('save', async function (next) {
             const salt = await bcrypt.genSalt(12);
             this.password = await bcrypt.hash(this.password, salt);
 
-           
+
         } catch (err) {
             next(err as CallbackError);
         }

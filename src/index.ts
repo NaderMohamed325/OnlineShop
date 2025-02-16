@@ -12,6 +12,7 @@ import sessionStore from "connect-mongodb-session";
 import favicon from "serve-favicon";
 import {cartRouter} from "./routers/cartRouter";
 import flash from "connect-flash";
+import {passwordResetRouter} from "./routers/passwordResetRouter";
 
 
 dotenv.config();
@@ -66,6 +67,7 @@ app.use('/', homeRouter);
 app.use('/', productRouter);
 app.use('/', authRouter);
 app.use('/', cartRouter);
+app.use('/',passwordResetRouter);
 app.use(globalErrorHandler);
 app.all('*', (req: Request, res: Response) => {
     res.render('error.ejs', {
