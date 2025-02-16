@@ -5,7 +5,7 @@ dist
 logs
 *.log
 npm-debug.log*
-
+package-lock.json
 .idea
 # Dependency directories
 pids
