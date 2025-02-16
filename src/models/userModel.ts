@@ -6,6 +6,7 @@ export interface IUser extends mongoose.Document {
     email: string;
     password: string;
     resetToken: string;
+    tokenExpireTime: any;
 }
 
 const userSchema = new mongoose.Schema({
@@ -28,6 +29,10 @@ const userSchema = new mongoose.Schema({
     },
     resetToken: {
         type: String,
+        required: false
+    },
+    tokenExpireTime: {
+        type: Date,
         required: false
     }
 });

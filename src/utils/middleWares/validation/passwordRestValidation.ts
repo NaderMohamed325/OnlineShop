@@ -11,6 +11,7 @@ const passwordResetMailer = catchAsync(async (req: Request, res: Response, _next
     }
     const token = crypto.randomBytes(20).toString('hex');
     user.resetToken = token;
+    user.tokenExpireTime = new Date(Date.now() + 3600000);
     await user.save();
 
     const transporter = nodemailer.createTransport({
@@ -54,7 +55,12 @@ const passwordResetMailer = catchAsync(async (req: Request, res: Response, _next
 
 const passwordResetToken = catchAsync(async (req: Request, res: Response) => {
     const {token} = req.params;
-    const user = await User.findOne({resetToken: token});
+    const user = await User.findOne({
+        resetToken: token,
+        tokenExpireTime: {$gt: Date.now()}
+    });
+    if (user)
+        console.log(user.tokenExpireTime > Date.now());
     if (user) {
         res.render('passwordResetGate.ejs', {token, isUser: req.session.userId});
     } else {
@@ -66,10 +72,15 @@ const passwordResetToken = catchAsync(async (req: Request, res: Response) => {
 });
 const passwordReset = catchAsync(async (req: Request, res: Response) => {
     const {token, password} = req.body;
-    const user = await User.findOne({resetToken: token});
+    const user = await User.findOne({
+        resetToken: token,
+        tokenExpireTime: {$gt: Date.now()}
+    });
+    console.log(user);
     if (user) {
         user.password = password;
         user.resetToken = "";
+        user.tokenExpireTime = undefined;
         await user.save();
         res.render('passwordResetSuccess.ejs', {isUser: req.session.userId});
     } else {
@@ -79,4 +90,5 @@ const passwordReset = catchAsync(async (req: Request, res: Response) => {
         });
     }
 });
+
 export {passwordResetMailer, passwordResetToken, passwordReset};
