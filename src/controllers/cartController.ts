@@ -4,7 +4,7 @@ import {validationResult} from "express-validator";
 import {Cart} from "../models/cartModel";
 import {Product} from "../models/productModel";
 
-const addToCart = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const addToCart = catchAsync(async (req: Request, res: Response, _next: NextFunction) => {
     const errors = validationResult(req);
     const category = req.query.category as string;
     const products = category ? await Product.find({category}) : await Product.find();
@@ -44,7 +44,7 @@ const addToCart = catchAsync(async (req: Request, res: Response, next: NextFunct
     res.redirect("/");
 });
 
-const getCart = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const getCart = catchAsync(async (req: Request, res: Response, _next: NextFunction) => {
     const cart = await Cart.findOne({userId: req.session.userId, active: true});
     res.render("cart.ejs", {cart, isUser: req.session.userId});
 
