@@ -98,12 +98,12 @@
                     <div class="card mb-4">
                         <img src="/<%= product.image %>" alt="<%= product.name %>">
                         <div class="card-body">
-                            <h5 class="card-title"><a href="/product/<%= product._id %>"><%= product.name %></a></h5>
+                            <h5 class="card-title"><a href="/product/<%= product.productId %>"><%= product.name %></a></h5>
                             <p class="card-text"><%= product.description %></p>
                             <p class="card-text"><strong>Price:</strong> $<%= product.price.toFixed(2) %></p>
                             <p class="card-text"><strong>Quantity:</strong> <%= product.quantity %></p>
                             <p class="card-text"><strong>Total:</strong> $<%= (product.price * product.quantity).toFixed(2) %></p>
-                            <form action="/cart/<%= product._id %>/delete" method="POST">
+                            <form action="/cart/<%= product.productId %>/delete" method="POST">
                                 <button type="submit" class="btn btn-danger">Remove from Cart</button>
                             </form>
                         </div>
