@@ -9,6 +9,8 @@ import favicon from "serve-favicon";
 import flash from "connect-flash";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
+import xss from "xss-clean";
 
 import {homeRouter} from "./routers/homeRouter";
 import {productRouter} from "./routers/productRouter";
@@ -25,6 +27,7 @@ const app = express();
 
 // Security middleware
 app.use(helmet());
+app.use(xss());
 app.use(express.json({limit: '10kb'})); // Body limit is 10kb
 // Rate limiting middleware
 const limiter = rateLimit({
@@ -35,7 +38,7 @@ const limiter = rateLimit({
     message: "Too many requests from this IP, please try again after 15 minutes"
 });
 app.use('/', limiter);
-
+// app.use(hpp());
 // Middleware for parsing request bodies
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -60,7 +63,7 @@ mongoose.connect(process.env.DB_URI || `mongodb://localhost:27017/products`)
         console.error("Error connecting to database");
         console.error(error);
     });
-
+app.use(mongoSanitize());
 // Session store setup
 const MongoDBStore = sessionStore(session);
 const store = new MongoDBStore({
@@ -111,4 +114,16 @@ app.all('*', (req: Request, res: Response) => {
 // Start the server
 app.listen(3000, () => {
     console.log(`Server is running`);
+});
+
+app.on('error', (error) => {
+    console.error('Error starting server:', error);
+})
+process.on('unhandledRejection', (error) => {
+    console.error('Unhandled rejection:', error);
+    process.exit(1);
+});
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught exception:', error);
+    process.exit(1);
 });
