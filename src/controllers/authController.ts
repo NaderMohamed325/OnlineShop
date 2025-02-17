@@ -46,7 +46,7 @@ const LoginPost = catchAsync(async (req: Request, res: Response, next: NextFunct
             console.error("Session save error:", err);
             return next(err); // Pass error to the error handler middleware
         }
-        return res.redirect("/dashboard");
+        return res.redirect("/");
     });
 });
 
