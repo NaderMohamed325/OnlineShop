@@ -1,0 +1,109 @@
+<%- include('parts/header') %>
+<%- include('parts/navbar') %>
+
+<style>
+    body {
+        background: linear-gradient(to right, #1f1c2c, #928dab);
+        min-height: 100vh;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .card {
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        color: white;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 24px rgba(255, 255, 255, 0.25);
+    }
+
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-title a {
+        color: #ffcc00;
+        text-decoration: none;
+        transition: color 0.3s;
+        font-weight: bold;
+    }
+
+    .card-title a:hover {
+        color: #ff8800;
+    }
+
+    .card-text {
+        color: #d1d1e9;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #ff7eb3, #ffcc00);
+        border: none;
+        padding: 10px 16px;
+        font-size: 1rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+        font-weight: bold;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #ff4d6d, #ff9100);
+        transform: scale(1.1);
+        box-shadow: 0 0 12px rgba(255, 140, 0, 0.8);
+    }
+</style>
+
+<div class="container">
+    <h1 class="text-center">Checkout</h1>
+    <% if (cart && cart.products.length > 0) { %>
+        <div class="row">
+            <% cart.products.forEach(function(product) { %>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img src="/<%= product.image %>" alt="<%= product.name %>">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="/product/<%= product.productId %>"><%= product.name %></a></h5>
+                            <p class="card-text"><%= product.description %></p>
+                            <p class="card-text"><strong>Price:</strong> $<%= product.price.toFixed(2) %></p>
+                            <p class="card-text"><strong>Quantity:</strong> <%= product.quantity %></p>
+                            <p class="card-text"><strong>Total:</strong> $<%= (product.price * product.quantity).toFixed(2) %></p>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+        <div class="text-center">
+            <h3>Total Amount: $<%= cart.products.reduce((total, product) => total + (product.price * product.quantity), 0).toFixed(2) %></h3>
+            <form action="/checkout" method="POST">
+                <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+            </form>
+        </div>
+    <% } else { %>
+        <div class="text-center">
+            <p>Your cart is empty.</p>
+            <a href="/" class="btn btn-primary">Continue Shopping</a>
+        </div>
+    <% } %>
+</div>
+
+<%- include('parts/footer') %>
