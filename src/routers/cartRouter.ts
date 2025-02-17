@@ -1,5 +1,5 @@
 import express from "express";
-import {addToCart, getCart} from "../controllers/cartController";
+import {addToCart, checkout, getCart, removeFromCart} from "../controllers/cartController";
 import {cartValidation} from "../utils/middleWares/validation/cartValidation";
 import {isAuthenticated} from "../utils/middleWares/protect/routeProtection";
 
@@ -10,6 +10,12 @@ cartRouter.route('/cart-add')
 
 cartRouter.route('/cart')
     .get(isAuthenticated, getCart);
+
+cartRouter.route('/cart/:productId/delete')
+    .post(removeFromCart);
+
+cartRouter.route('/checkout')
+    .get(checkout);
 
 
 export {cartRouter};
