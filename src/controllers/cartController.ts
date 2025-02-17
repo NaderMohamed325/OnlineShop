@@ -49,5 +49,42 @@ const getCart = catchAsync(async (req: Request, res: Response, _next: NextFuncti
     res.render("cart.ejs", {cart, isUser: req.session.userId});
 
 });
+///cart/<%= product._id %>/delete
+const removeFromCart = catchAsync(async (req: Request, res: Response, _next: NextFunction) => {
+    const userCart = await Cart.findOne({userId: req.session.userId, active: true});
 
-export {addToCart , getCart};
+    if (userCart) {
+        const productId = req.params.productId;
+
+
+        const productIndex = userCart.products.findIndex((element) => element.productId === productId);
+        console.log(productId,productIndex);
+        if (productIndex > -1) {
+
+            userCart.products.splice(productIndex, 1);
+            userCart.modifiedOn = new Date();
+
+            await userCart.save();
+
+            req.flash('success_msg', 'Product removed from cart successfully!');
+            res.redirect("/cart");
+        } else {
+            res.render('error.ejs', {
+                error: {status: 404, message: "Product not found in cart"},
+                isUser: req.session.userId
+            });
+        }
+    } else {
+        res.render('error.ejs', {
+            error: {status: 500, message: "Invalid User"},
+            isUser: req.session.userId
+        });
+    }
+});
+
+const checkout = catchAsync(async (req: Request, res: Response, _next: NextFunction) => {
+    const userCart = await Cart.findOne({userId: req.session.userId, active: true});
+    res.render("checkout.ejs", {isUser: req.session.userId, cart: userCart});
+});
+
+export {addToCart, getCart, removeFromCart, checkout};
