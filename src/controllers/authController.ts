@@ -11,7 +11,7 @@ const SignUpPage = catchAsync(async (req: Request, res: Response) => {
 const SignUpPost = catchAsync(async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render("signup.ejs", {errors: errors.array()});
+        return res.render("signup.ejs", {errors: errors.array(), isUser: req.session.userId});
     }
 
     const {name, email, password} = req.body;
@@ -29,12 +29,12 @@ const LoginPost = catchAsync(async (req: Request, res: Response, next: NextFunct
 
     const user = await User.findOne({email}).select("+password");
     if (!user) {
-        return res.render("login.ejs", {errors: [{msg: "Invalid credentials"}]});
+        return res.render("login.ejs", {errors: [{msg: "Invalid credentials"}], isUser: req.session.userId});
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-        return res.render("login.ejs", {errors: [{msg: "Invalid credentials"}]});
+        return res.render("login.ejs", {errors: [{msg: "Invalid credentials"}], isUser: req.session.userId});
     }
     console.log("Session:", req.session);
     console.log("Session User ID:", req.session.userId);
